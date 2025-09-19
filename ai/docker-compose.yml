@@ -1,12 +1,20 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  llm-chat-api:
+  fastapi-app:
     build: .
+    container_name: resume-analyst-api
     ports:
       - "8000:8000"
+    volumes:
+      - ./ai/json_dumps:/app/ai/json_dumps
+      - ./logs:/app/logs
     environment:
-      - API_KEY=sk-gjJaNA4AavPDqX_rna840Q
-      - BASE_URL=https://llm.t1v.scibox.tech/v1
-    # volumes:
-    #   - ./responses:/app/responses
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

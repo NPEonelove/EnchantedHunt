@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
 import uvicorn
+import httpx
 
 
 class ChatRequest(BaseModel):
@@ -26,7 +27,6 @@ class ChatResponse(BaseModel):
 
 app = FastAPI()
 
-# Функции-утилиты
 def wrap_response_in_json(response_content: str, processing_time: float, model: str) -> str:
     response_data = {
         "response": response_content,
@@ -57,10 +57,10 @@ def save_json_to_file(json_data: str, folder_path: str = "ai/json_dumps", filena
     return file_path
 
 
-API_KEY = "sk-gjJaNA4AavPDqX_rna840Q"
-BASE_URL = "https://llm.t1v.scibox.tech/v1"
+API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
+BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 
-client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 
 @app.get("/")
 async def root():
@@ -72,7 +72,7 @@ async def root():
         }
     }
 
-
+@app.get("/health")
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
