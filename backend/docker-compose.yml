@@ -28,9 +28,9 @@ services:
 #    ports:
 #      - "8080:8080"
 #    depends_on:
-#      - user_db
+#      - ehunt_db
 #    networks:
-#      - backend-network
+#      - ehunt-network
 
 networks:
   ehunt-network:
