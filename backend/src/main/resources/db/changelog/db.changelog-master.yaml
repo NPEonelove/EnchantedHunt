@@ -1,3 +1,5 @@
 databaseChangeLog:
-#  - include:
-#      file: /db/changelog/versions/2025-09-17__create_users_table.sql
+  - include:
+      file: /db/changelog/versions/user/2025-09-19__create_users_table.sql
+  - include:
+      file: /db/changelog/versions/user/2025-09-19__add_default_role_value.sql
