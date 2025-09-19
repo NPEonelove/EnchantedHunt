@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  llm-chat-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - API_KEY=${API_KEY:-sk-gjJaNA4AavPDqX_rna840Q}
+      - BASE_URL=${BASE_URL:-https://llm.t1v.scibox.tech/v1}
+    volumes:
+      - ./responses:/app/responses
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
