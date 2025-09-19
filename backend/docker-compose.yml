@@ -1,42 +1,42 @@
 version: "3.9"
 
 services:
-  user_db:
+  ehunt_db:
     image: postgres
-    container_name: user_db
+    container_name: ehunt_db
     environment:
-      POSTGRES_DB: "users"
+      POSTGRES_DB: "ehunt"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1"
     networks:
-      - backend-network
+      - ehunt-network
     ports:
-      - "5435:5432"
+      - "5454:5432"
     volumes:
-      - postgres-profile-data:/var/lib/postgresql/data
+      - postgres-ehunt-data:/var/lib/postgresql/data
 
 #  ehunt-backend:
 #    build:
 #      context: .
 #    container_name: EHunt-backend
 #    environment:
-#      SERVER_PORT: 8090
-#      JWT_SECRET_KEY: "9afb677aa410c183ee35ea8a37a0afa6"
+#      SERVER_PORT: 8080
+#      JWT_SECRET_KEY: "s7k5n2x9r1v6y8w4z7u5i3o9l2p5n0x3r1v6y8w4z7u5i3o9l2p5n0x3"
 #      SPRING_DATASOURCE_URL: "jdbc:postgresql://user_db:5435/users"
 #      SPRING_DATASOURCE_USERNAME: "postgres"
 #      SPRING_DATASOURCE_PASSWORD: "1"
 #    ports:
-#      - "8090:8090"
+#      - "8090:8080"
 #    depends_on:
 #      - user_db
 #    networks:
 #      - backend-network
 
 networks:
-  backend-network:
+  ehunt-network:
     driver: bridge
 
 volumes:
-  postgres-profile-data:
+  postgres-ehunt-data:
 
 
