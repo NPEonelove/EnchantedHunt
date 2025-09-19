@@ -52,7 +52,7 @@ public class Vacancy {
     private List<Requirement> requirements;
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Skill> skills;
+    private List<RequirementSkill> requirementSkills;
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefits;

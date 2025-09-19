@@ -1,12 +1,14 @@
 package org.npeonelove.backend.model.resumeEntity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.npeonelove.backend.model.resumeEntity.resumeEnum.SkillLevel;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "skills")
+@Data
 public class Skill {
 
     @Id

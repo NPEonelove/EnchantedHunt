@@ -1,10 +1,13 @@
 package org.npeonelove.backend.model.resumeEntity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.UUID;
 
 @Entity
 @Table(name = "comments")
+@Data
 public class Comment {
 
     @Id

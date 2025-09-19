@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Skill {
+public class RequirementSkill {
 
     @Id
     @GeneratedValue(generator = "UUID")

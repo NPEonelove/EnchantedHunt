@@ -1,11 +1,14 @@
 package org.npeonelove.backend.model.resumeEntity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "additional_education")
+@Data
 public class AdditionalEducation {
 
     @Id

@@ -1,10 +1,13 @@
 package org.npeonelove.backend.model.resumeEntity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.*;
 
 @Entity
 @Table(name = "employees")
+@Data
 public class Employee {
 
     @Id
