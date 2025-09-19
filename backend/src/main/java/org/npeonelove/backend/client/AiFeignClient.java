@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "aiService", url = "http://localhost:8000")
 public interface AiFeignClient {
 
-    @GetMapping("/test")
+    @GetMapping("/")
     String test();
 
 }
