@@ -13,5 +13,5 @@ import org.npeonelove.backend.dto.resume.EmployeeRequestDTO;
 public class InitChatCareerGuideWithoutVacancyRequestDTO {
     private EmployeeRequestDTO employeeRequest;
 
-    private String message;
+    private String initialMessage;
 }

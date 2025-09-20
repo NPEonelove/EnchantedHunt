@@ -27,8 +27,8 @@ public class ChatController {
 
     @MessageMapping("/chat.without-vacancy")
     @SendTo("/topic/messages")
-    public String generateCareerGuideWithoutVacancy(@RequestBody InitChatCareerGuideWithoutVacancyRequestDTO initChatCareerGuideWithoutVacancyRequestDTO) throws JsonProcessingException {
-        return chatService.generateCareerGuideWithoutVacancy(initChatCareerGuideWithoutVacancyRequestDTO);
+    public String generateCareerGuideWithoutVacancy(String jsonMessageInitChatCareerGuideWithoutVacancyRequest) throws JsonProcessingException {
+        return chatService.generateCareerGuideWithoutVacancy(jsonMessageInitChatCareerGuideWithoutVacancyRequest);
     }
 
     @MessageMapping("/chat.with-vacancy")

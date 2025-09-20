@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessageRequest {
+public class ChatMessageRequestDTO {
     private String message;
     private String sessionId;
 }
