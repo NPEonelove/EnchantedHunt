@@ -11,6 +11,7 @@ from typing import Optional
 
 class SpringRequest(BaseModel):
     message: str
+    
 
 class ChatRequest(BaseModel):
     message: str
@@ -52,7 +53,7 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
     except requests.exceptions.RequestException:
         return False
 
-def call_llm(message: str, system_prompt: str, temperature: float, top_p: float, max_tokens: int) -> str:
+def call_llm(message: str, system_prompt: str, temperature: float, top_p: float) -> str:
     """Вызов LLM для генерации ответа"""
     try:
         resp = client.chat.completions.create(
@@ -63,7 +64,6 @@ def call_llm(message: str, system_prompt: str, temperature: float, top_p: float,
             ],
             temperature=temperature,
             top_p=top_p,
-            max_tokens=max_tokens,
         )
         return resp.choices[0].message.content
 
@@ -100,7 +100,6 @@ async def process_message_from_spring(request: SpringRequest):
         system_prompt = "Вы - полезный AI ассистент. Отвечайте вежливо и информативно."
         temperature = 0.7
         top_p = 0.9
-        max_tokens = 1024
         
         # Вызываем LLM
         llm_response = call_llm(
@@ -108,7 +107,6 @@ async def process_message_from_spring(request: SpringRequest):
             system_prompt,
             temperature,
             top_p,
-            max_tokens
         )
         
         # Отправляем ответ обратно в Spring
