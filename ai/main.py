@@ -91,7 +91,6 @@ async def process_message_from_spring(request: SpringRequest):
     try:
         # Получаем сообщение от Spring API (уже распарсено в объект SpringRequest)
         message = request.message
-        conversation_id = request.conversation_id
         
         # Если произошла ошибка при получении сообщения
         if "Ошибка" in message:
