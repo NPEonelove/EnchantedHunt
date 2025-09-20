@@ -1,6 +1,6 @@
-create table achievements (
+create table user_stats (
     achievement_id uuid primary key default gen_random_uuid(),
-    user_id uuid references users(user_id) not null ,
+    id uuid references employees(id) not null ,
     progress_bar int check ( progress_bar >= 0 and progress_bar <= 100 ) default 0,
     xp_count int check ( xp_count >= 0 ) default 0,
     my_corner bool default false, -- Заполнить все обязательные поля профиля.

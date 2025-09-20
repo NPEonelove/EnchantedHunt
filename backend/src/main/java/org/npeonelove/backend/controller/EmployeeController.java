@@ -3,6 +3,10 @@ package org.npeonelove.backend.controller;
 import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.dto.resume.EmployeeRequestDTO;
 import org.npeonelove.backend.dto.resume.EmployeeResponseDTO;
+import org.npeonelove.backend.mapper.resumeMapper.EmployeeMapper;
+import org.npeonelove.backend.model.resumeEntity.Employee;
+import org.npeonelove.backend.repository.EmployeeRepository;
+import org.npeonelove.backend.service.EmployeeGamificationService;
 import org.npeonelove.backend.service.EmployeeService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,8 @@ import java.util.*;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeGamificationService employeeGamificationService;
 
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> create(@RequestBody EmployeeRequestDTO request) {
@@ -42,5 +48,18 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDTO>> list() {
         return ResponseEntity.ok(employeeService.listEmployees());
+    }
+
+    @PostMapping("/{id}/add-xp")
+    public ResponseEntity<String> addExperience(
+            @PathVariable UUID id,
+            @RequestParam int xp
+    ) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        employeeGamificationService.addExperience(employee, xp);
+
+        return ResponseEntity.ok("Added " + xp + " XP to employee " + employee.getFullName());
     }
 }

@@ -3,7 +3,7 @@ package org.npeonelove.backend.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.npeonelove.backend.model.achievement.Achievement;
+import org.npeonelove.backend.model.achievement.UserStats;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -35,7 +35,4 @@ public class User {
     @Column(name = "created_at", updatable = false, nullable = false)
     private ZonedDateTime createdAt;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Achievement achievement;
 }

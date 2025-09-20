@@ -1,32 +1,30 @@
 package org.npeonelove.backend.model.achievement;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.npeonelove.backend.model.resumeEntity.Employee;
 import org.npeonelove.backend.model.user.User;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "achievements")
+@Table(name = "user_stats")
 @Data // Генерирует геттеры, сеттеры, toString, equals, hashCode
 @Builder // Позволяет удобно создавать объекты через Achievement.builder()...
 @NoArgsConstructor // Генерирует конструктор без аргументов (обязателен для JPA)
 @AllArgsConstructor // Генерирует конструктор со всеми аргументами
-public class Achievement {
+public class UserStats {
 
     @Id
     @Column(name = "achievement_id", updatable = false, nullable = false)
     private UUID achievementId;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "id", nullable = false)
+    private Employee employee;
 
     @Column(name = "progress_bar")
     private Integer progressBar = 0;
