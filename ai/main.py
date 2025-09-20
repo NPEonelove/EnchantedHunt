@@ -24,7 +24,7 @@ class ChatRequest(BaseModel):
 app = FastAPI()
 
 # Конфигурация Spring API
-SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080/api")
+SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080")
 
 # Конфигурация OpenAI
 API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
