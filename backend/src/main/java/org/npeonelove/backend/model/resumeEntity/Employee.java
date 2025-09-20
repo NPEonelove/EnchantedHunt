@@ -48,6 +48,6 @@ public class Employee {
     private List<AdditionalEducation> additionalEducationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EmployeeSkill> employeeSkills = new ArrayList<>();
+    private List<EmployeeSkill> skills = new ArrayList<>();
 
 }

@@ -3,6 +3,7 @@ package org.npeonelove.backend.controller;
 import org.npeonelove.backend.exception.BadRequestException;
 import org.npeonelove.backend.exception.ErrorResponse;
 import org.npeonelove.backend.exception.InternalServerErrorException;
+import org.npeonelove.backend.exception.resume.EmployeeNotFoundException;
 import org.npeonelove.backend.exception.user.*;
 import org.npeonelove.backend.exception.vacancy.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -76,7 +77,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(RefreshTokenValidationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorResponse(
                         HttpStatus.NOT_FOUND.value(),
                         "Data not found",
@@ -102,11 +103,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInternal(RefreshTokenValidationException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse(
-                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         "Server error",
                         ex.getMessage(),
                         LocalDateTime.now()
                 )
         );
     }
+
 }

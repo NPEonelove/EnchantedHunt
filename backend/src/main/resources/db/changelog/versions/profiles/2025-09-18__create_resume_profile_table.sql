@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS employees (
 CREATE TABLE IF NOT EXISTS roles (
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        employee_id UUID REFERENCES employees(id) ON DELETE CASCADE,
-                       role_type VARCHAR(255) CHECK (role_type IN ('Функциональная', 'Специализация')),
+                       role_type VARCHAR(255) CHECK (role_type IN ('FUNCTIONAL', 'SPECIALIZATION')),
                        title VARCHAR(255),
                        responsibilities TEXT
 );
@@ -49,9 +49,9 @@ CREATE TABLE IF NOT EXISTS additional_education (
                                       issue_date DATE
 );
 
-CREATE TABLE IF NOT EXISTS skillsEmployee (
+CREATE TABLE IF NOT EXISTS skills_employee (
                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                         employee_id UUID REFERENCES employees(id) ON DELETE CASCADE,
                         skill VARCHAR(255),
-                        level VARCHAR(255) CHECK (level IN ('Начальный', 'Уверенный', 'Продвинутый'))
+                        level VARCHAR(255) CHECK (level IN ('ELEMENTARY', 'CONFIDENT', 'ADVANCED'))
 );

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.dto.resume.EmployeeRequestDTO;
 import org.npeonelove.backend.dto.resume.EmployeeResponseDTO;
 import org.npeonelove.backend.exception.resume.EmployeeNotFoundException;
+import org.npeonelove.backend.exception.vacancy.ResourceNotFoundException;
 import org.npeonelove.backend.mapper.resumeMapper.EmployeeMapper;
 import org.npeonelove.backend.model.resumeEntity.Employee;
 import org.npeonelove.backend.repository.EmployeeRepository;
@@ -14,6 +15,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -28,15 +30,15 @@ public class EmployeeService {
 
     // READ
     public EmployeeResponseDTO getEmployee(UUID id) {
-        Employee Employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found: " + id));
+        Employee Employee = employeeRepository.findByUUID(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id));
         return employeeMapper.toResponseDto(Employee);
     }
 
     // UPDATE
     public EmployeeResponseDTO updateEmployee(UUID id, EmployeeRequestDTO request) {
-        Employee Employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found: " + id));
+        Employee Employee = employeeRepository.findByUUID(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id));
 
         // Обновим поля вручную (MapStruct не делает merge по умолчанию)
         Employee.setFullName(request.getFullName());
@@ -51,10 +53,9 @@ public class EmployeeService {
 
     // DELETE
     public void deleteEmployee(UUID id) {
-        if (!employeeRepository.existsById(id)) {
-            throw new EmployeeNotFoundException("Employee not found: " + id);
-        }
-        employeeRepository.deleteById(id);
+        Employee existing = employeeRepository.findByUUID(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id));
+        employeeRepository.delete(existing);
     }
 
     // LIST
