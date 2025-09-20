@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -11,53 +12,113 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Проверяем, есть ли токен в localStorage при загрузке
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Здесь можно добавить проверку валидности токена
-      setCurrentUser({ token });
+    const token = localStorage.getItem('accessToken');
+    const userData = localStorage.getItem('user');
+    
+    if (token && userData) {
+      setCurrentUser({ ...JSON.parse(userData), token });
     }
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
     try {
-      // Здесь будет вызов API
-      const response = await fakeAuthAPI(email, password);
-      const { token, user } = response;
+      const response = await authService.signIn({
+        email: email,
+        password: password
+      });
+
+      const { accessToken, refreshToken, user } = response;
       
-      localStorage.setItem('token', token);
-      setCurrentUser({ ...user, token });
+      // Сохраняем токены и данные пользователя
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      setCurrentUser({ ...user, token: accessToken });
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      let errorMessage = 'Failed to login';
+      
+      if (error.response?.data) {
+        errorMessage = error.response.data.message || errorMessage;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 
   const register = async (email, password, name) => {
     try {
-      // Здесь будет вызов API для регистрации
-      const response = await fakeRegisterAPI(email, password, name);
-      const { token, user } = response;
+      const response = await authService.signUp({
+        email: email,
+        password: password,
+        name: name
+      });
+
+      const { accessToken, refreshToken, user } = response;
       
-      localStorage.setItem('token', token);
-      setCurrentUser({ ...user, token });
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      setCurrentUser({ ...user, token: accessToken });
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      let errorMessage = 'Failed to create account';
+      
+      if (error.response?.data) {
+        errorMessage = error.response.data.message || errorMessage;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setCurrentUser(null);
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      setCurrentUser(null);
+    }
+  };
+
+  // Функция для обновления токена
+  const refreshAuthToken = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
+
+      const response = await authService.refreshToken(refreshToken);
+      const { accessToken, refreshToken: newRefreshToken } = response;
+      
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', newRefreshToken);
+      
+      return accessToken;
+    } catch (error) {
+      logout();
+      throw error;
+    }
   };
 
   const value = {
     currentUser,
     login,
     register,
-    logout
+    logout,
+    refreshAuthToken
   };
 
   return (
@@ -65,43 +126,4 @@ export const AuthProvider = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
-};
-
-// Заглушки для API (замените на реальные вызовы)
-const fakeAuthAPI = (email, password) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === 'test@example.com' && password === 'password') {
-        resolve({
-          token: 'fake-jwt-token',
-          user: { 
-            id: 1, 
-            email, 
-            name: 'Test User',
-            position: 'Frontend Developer',
-            department: 'IT Department'
-          }
-        });
-      } else {
-        reject(new Error('Invalid credentials'));
-      }
-    }, 1000);
-  });
-};
-
-const fakeRegisterAPI = (email, password, name) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        token: 'fake-jwt-token',
-        user: { 
-          id: Date.now(), 
-          email, 
-          name,
-          position: '',
-          department: ''
-        }
-      });
-    }, 1000);
-  });
 };
