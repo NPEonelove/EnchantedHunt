@@ -1,7 +1,14 @@
 package org.npeonelove.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.client.AiFeignClient;
+import org.npeonelove.backend.service.ChatService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final AiFeignClient aiFeignClient;
+    private final ChatService chatService;
 
-    @GetMapping("/test")
-    public String test() {
-        return aiFeignClient.test();
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public String processMessageFromClient(String message) throws JsonProcessingException {
+        return chatService.answerMessage(message);
     }
-
 }
