@@ -22,19 +22,19 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> getById(@PathVariable UUID id) {
+    public ResponseEntity<EmployeeResponseDTO> getById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(employeeService.getEmployee(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponseDTO> update(
-            @PathVariable UUID id,
+            @PathVariable("id") UUID id,
             @RequestBody EmployeeRequestDTO request) {
         return ResponseEntity.ok(employeeService.updateEmployee(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
