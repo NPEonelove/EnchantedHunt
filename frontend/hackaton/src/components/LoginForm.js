@@ -2,23 +2,32 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!email || !password) {
+    if (!formData.email || !formData.password) {
       return setError('Please fill in all fields');
     }
 
     try {
       setError('');
       setLoading(true);
-      const result = await login(email, password);
+      const result = await login(formData.email, formData.password);
       
       if (!result.success) {
         setError(result.error);
@@ -39,8 +48,9 @@ const LoginForm = () => {
         <label>Email:</label>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           required
           placeholder="Enter your email"
         />
@@ -49,8 +59,9 @@ const LoginForm = () => {
         <label>Password:</label>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
           required
           placeholder="Enter your password"
         />
