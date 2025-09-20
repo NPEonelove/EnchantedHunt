@@ -7,7 +7,7 @@ import './EmployeeProfile.css';
 const EmployeeProfile = () => {
   const { currentUser, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile'); // 'profile' или 'vacancies'
+  const [activeTab, setActiveTab] = useState('profile');
 
   const [employeeData, setEmployeeData] = useState({
     position: 'Frontend Developer',
@@ -28,7 +28,6 @@ const EmployeeProfile = () => {
     resume: ''
   });
 
-  // Данные вакансий
   const [vacancies] = useState([
     {
       id: 1,
@@ -49,16 +48,6 @@ const EmployeeProfile = () => {
       salary: 'от 300 000 руб.',
       requirements: ['7+ лет опыта', 'React, Vue или Angular', 'Управление командой 5+ человек', 'Архитектурные навыки'],
       status: 'active'
-    },
-    {
-      id: 3,
-      title: 'Middle Fullstack Developer',
-      department: 'IT Department',
-      level: 'Middle',
-      location: 'Удаленно',
-      salary: 'от 150 000 руб.',
-      requirements: ['3+ года опыта', 'React + Node.js', 'MongoDB/PostgreSQL', 'Опыт работы с API'],
-      status: 'closed'
     }
   ]);
 
@@ -74,6 +63,20 @@ const EmployeeProfile = () => {
     setIsEditing(false);
   };
 
+  const InfoItem = ({ label, value, color }) => (
+    <div className="info-item" style={{ borderLeftColor: color }}>
+      <span className="label" style={{ color }}>{label}:</span>
+      <span className="value">{value}</span>
+    </div>
+  );
+
+  const BulletedItem = ({ children, color }) => (
+    <div className="bulleted-item">
+      <span className="bullet" style={{ color }}>•</span>
+      <span>{children}</span>
+    </div>
+  );
+
   const renderProfileTab = () => (
     !isEditing ? (
       <motion.div 
@@ -82,9 +85,7 @@ const EmployeeProfile = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        {/* Основная информация слева */}
         <div className="left-column">
-          {/* Личная информация */}
           <motion.div 
             className="info-card personal-card"
             initial={{ x: -50, opacity: 0 }}
@@ -100,7 +101,6 @@ const EmployeeProfile = () => {
             </div>
           </motion.div>
 
-          {/* Рабочая информация */}
           <motion.div 
             className="info-card work-card"
             initial={{ x: -50, opacity: 0 }}
@@ -117,9 +117,7 @@ const EmployeeProfile = () => {
           </motion.div>
         </div>
 
-        {/* Центральная колонка */}
         <div className="center-column">
-          {/* Навыки */}
           <motion.div 
             className="info-card skills-card"
             initial={{ y: 50, opacity: 0 }}
@@ -141,7 +139,6 @@ const EmployeeProfile = () => {
             </div>
           </motion.div>
 
-          {/* Обязанности */}
           <motion.div 
             className="info-card responsibilities-card"
             initial={{ y: 50, opacity: 0 }}
@@ -153,22 +150,18 @@ const EmployeeProfile = () => {
               {employeeData.responsibilities.map((responsibility, index) => (
                 <motion.div
                   key={index}
-                  className="bulleted-item"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                  <span className="bullet">•</span>
-                  <span>{responsibility}</span>
+                  <BulletedItem color="#48bb78">{responsibility}</BulletedItem>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* Правая колонка */}
         <div className="right-column">
-          {/* Опыт и образование */}
           <motion.div 
             className="info-card experience-card"
             initial={{ x: 50, opacity: 0 }}
@@ -177,18 +170,15 @@ const EmployeeProfile = () => {
           >
             <h2>🎓 Experience & Education</h2>
             <div className="bulleted-list">
-              <div className="bulleted-item">
-                <span className="bullet">•</span>
-                <span><strong>Experience:</strong> {employeeData.experience}</span>
-              </div>
-              <div className="bulleted-item">
-                <span className="bullet">•</span>
-                <span><strong>Education:</strong> {employeeData.education}</span>
-              </div>
-              <div className="bulleted-item">
-                <span className="bullet">•</span>
-                <span><strong>Languages:</strong> {employeeData.languages}</span>
-              </div>
+              <BulletedItem color="#f56565">
+                <strong>Experience:</strong> {employeeData.experience}
+              </BulletedItem>
+              <BulletedItem color="#f56565">
+                <strong>Education:</strong> {employeeData.education}
+              </BulletedItem>
+              <BulletedItem color="#f56565">
+                <strong>Languages:</strong> {employeeData.languages}
+              </BulletedItem>
             </div>
           </motion.div>
         </div>
@@ -218,15 +208,15 @@ const EmployeeProfile = () => {
         {vacancies.map((vacancy, index) => (
           <motion.div
             key={vacancy.id}
-            className={`vacancy-card ${vacancy.status}`}
+            className="vacancy-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
           >
             <div className="vacancy-header">
               <h3>{vacancy.title}</h3>
-              <span className={`status-badge ${vacancy.status}`}>
-                {vacancy.status === 'active' ? 'Активная' : 'Закрыта'}
+              <span className="status-badge active">
+                Активная
               </span>
             </div>
             
@@ -253,19 +243,16 @@ const EmployeeProfile = () => {
               <h4>Требования:</h4>
               <div className="bulleted-list">
                 {vacancy.requirements.map((requirement, reqIndex) => (
-                  <div key={reqIndex} className="bulleted-item">
-                    <span className="bullet">•</span>
-                    <span>{requirement}</span>
-                  </div>
+                  <BulletedItem key={reqIndex} color="#667eea">
+                    {requirement}
+                  </BulletedItem>
                 ))}
               </div>
             </div>
 
-            {vacancy.status === 'active' && (
-              <button className="apply-btn">
-                Подать заявку
-              </button>
-            )}
+            <button className="apply-btn">
+              Подать заявку
+            </button>
           </motion.div>
         ))}
       </div>
@@ -274,7 +261,6 @@ const EmployeeProfile = () => {
 
   return (
     <div className="employee-profile">
-      {/* Хедер */}
       <motion.header 
         className="profile-header"
         initial={{ opacity: 0, y: -20 }}
@@ -297,7 +283,6 @@ const EmployeeProfile = () => {
         </div>
       </motion.header>
 
-      {/* Навигационные табы */}
       <div className="tabs-navigation">
         <button 
           className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
@@ -313,7 +298,6 @@ const EmployeeProfile = () => {
         </button>
       </div>
 
-      {/* Кнопка редактирования только на вкладке профиля */}
       {activeTab === 'profile' && !isEditing && (
         <div className="edit-profile-btn">
           <motion.button
@@ -327,26 +311,9 @@ const EmployeeProfile = () => {
         </div>
       )}
 
-      {/* Контент в зависимости от активной вкладки */}
       {activeTab === 'profile' ? renderProfileTab() : renderVacanciesTab()}
     </div>
   );
 };
-
-// Компонент для отображения пар label-value
-const InfoItem = ({ label, value, color }) => (
-  <div className="info-item">
-    <span className="label">{label}:</span>
-    <span className="value">{value}</span>
-    <style jsx>{`
-      .info-item {
-        border-left-color: ${color} !important;
-      }
-      .label {
-        color: ${color} !important;
-      }
-    `}</style>
-  </div>
-);
 
 export default EmployeeProfile;
