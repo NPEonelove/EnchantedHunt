@@ -1303,7 +1303,6 @@ body {
     width: 100%;
   }
 }
-}
 
 /* Стили для ошибок */
 .error {
@@ -1371,4 +1370,5 @@ button.loading::after {
   font-weight: 600;
   color: #555;
   font-size: 0.9rem;
+}
 }

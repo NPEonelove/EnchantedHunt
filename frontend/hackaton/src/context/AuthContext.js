@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
-import { safeLocalStorage } from '../utils/localStorage';
 
 const AuthContext = createContext();
 
@@ -14,13 +13,24 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = () => {
-      const token = safeLocalStorage.getItem('accessToken');
-      const userData = safeLocalStorage.getJSON('user');
-      
-      if (token && userData) {
-        setCurrentUser({ ...userData, token });
+      try {
+        const token = localStorage.getItem('accessToken');
+        const userData = localStorage.getItem('user');
+        
+        // Проверяем, что userData существует и не является undefined
+        if (token && userData && userData !== 'undefined') {
+          const parsedUser = JSON.parse(userData);
+          setCurrentUser({ ...parsedUser, token });
+        }
+      } catch (error) {
+        console.error('Error parsing user data from localStorage:', error);
+        // Очищаем некорректные данные
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initializeAuth();
@@ -35,22 +45,24 @@ export const AuthProvider = ({ children }) => {
 
       const { accessToken, refreshToken, user } = response;
       
-      safeLocalStorage.setItem('accessToken', accessToken);
-      safeLocalStorage.setItem('refreshToken', refreshToken);
+      // Сохраняем токены и данные пользователя
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       
+      // Убеждаемся, что user - валидный объект
       if (user && typeof user === 'object') {
-        safeLocalStorage.setJSON('user', user);
+        localStorage.setItem('user', JSON.stringify(user));
         setCurrentUser({ ...user, token: accessToken });
+      } else {
+        throw new Error('Invalid user data received from server');
       }
       
       return { success: true };
     } catch (error) {
       let errorMessage = 'Failed to login';
       
-      if (error.response?.status === 401) {
-        errorMessage = 'Invalid email or password';
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.response?.data) {
+        errorMessage = error.response.data.message || errorMessage;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -69,30 +81,23 @@ export const AuthProvider = ({ children }) => {
 
       const { accessToken, refreshToken, user } = response;
       
-      safeLocalStorage.setItem('accessToken', accessToken);
-      safeLocalStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       
+      // Убеждаемся, что user - валидный объект
       if (user && typeof user === 'object') {
-        safeLocalStorage.setJSON('user', user);
+        localStorage.setItem('user', JSON.stringify(user));
         setCurrentUser({ ...user, token: accessToken });
+      } else {
+        throw new Error('Invalid user data received from server');
       }
       
       return { success: true };
     } catch (error) {
       let errorMessage = 'Failed to create account';
       
-      // Обработка конкретных ошибок
-      if (error.response?.status === 409) {
-        errorMessage = 'User with this email already exists';
-      } else if (error.response?.status === 400) {
-        // Обработка ошибок валидации
-        if (error.response.data?.message) {
-          errorMessage = error.response.data.message;
-        } else {
-          errorMessage = 'Invalid registration data';
-        }
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.response?.data) {
+        errorMessage = error.response.data.message || errorMessage;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -107,10 +112,30 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      safeLocalStorage.removeItem('accessToken');
-      safeLocalStorage.removeItem('refreshToken');
-      safeLocalStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
       setCurrentUser(null);
+    }
+  };
+
+  const refreshAuthToken = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
+
+      const response = await authService.refreshToken(refreshToken);
+      const { accessToken, refreshToken: newRefreshToken } = response;
+      
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', newRefreshToken);
+      
+      return accessToken;
+    } catch (error) {
+      logout();
+      throw error;
     }
   };
 
@@ -118,7 +143,8 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     login,
     register,
-    logout
+    logout,
+    refreshAuthToken
   };
 
   return (
