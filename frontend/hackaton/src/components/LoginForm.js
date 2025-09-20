@@ -31,7 +31,9 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      <h2>Login</h2>
+      <div className="logo-container">
+        <img src="/logo512.png" alt="Logo" className="logo" />
+      </div>
       {error && <div className="error">{error}</div>}
       <div className="form-group">
         <label>Email:</label>
@@ -40,6 +42,7 @@ const LoginForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          placeholder="Enter your email"
         />
       </div>
       <div className="form-group">
@@ -49,6 +52,7 @@ const LoginForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          placeholder="Enter your password"
         />
       </div>
       <button type="submit" disabled={loading}>

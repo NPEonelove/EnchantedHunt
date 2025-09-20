@@ -25,6 +25,10 @@ const Dashboard = () => {
           animate={{ scale: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
+          <div className="logo-container">
+            <img src="/logo512.png" alt="Logo" className="logo" />
+          </div>
+          
           <motion.h1
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

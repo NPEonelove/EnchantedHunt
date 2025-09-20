@@ -26,6 +26,10 @@ const RegisterForm = () => {
       return setError('Passwords do not match');
     }
 
+    if (formData.password.length < 6) {
+      return setError('Password must be at least 6 characters long');
+    }
+
     try {
       setError('');
       setLoading(true);
@@ -42,7 +46,9 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      <h2>Register</h2>
+      <div className="logo-container">
+        <img src="/logo512.png" alt="Logo" className="logo" />
+      </div>
       {error && <div className="error">{error}</div>}
       <div className="form-group">
         <label>Name:</label>
@@ -52,6 +58,7 @@ const RegisterForm = () => {
           value={formData.name}
           onChange={handleChange}
           required
+          placeholder="Enter your name"
         />
       </div>
       <div className="form-group">
@@ -62,6 +69,7 @@ const RegisterForm = () => {
           value={formData.email}
           onChange={handleChange}
           required
+          placeholder="Enter your email"
         />
       </div>
       <div className="form-group">
@@ -72,6 +80,7 @@ const RegisterForm = () => {
           value={formData.password}
           onChange={handleChange}
           required
+          placeholder="Enter your password"
         />
       </div>
       <div className="form-group">
@@ -82,6 +91,7 @@ const RegisterForm = () => {
           value={formData.confirmPassword}
           onChange={handleChange}
           required
+          placeholder="Confirm your password"
         />
       </div>
       <button type="submit" disabled={loading}>
