@@ -112,12 +112,11 @@ async def process_message_from_spring(request: SpringRequest):
         )
         
         # Отправляем ответ обратно в Spring
-        send_response_to_spring(llm_response, conversation_id)
+        send_response_to_spring(llm_response)
         
         # Возвращаем ответ для отладки
         return {
             "response": llm_response,
-            "conversation_id": conversation_id,
             "status": "success"
         }
         
