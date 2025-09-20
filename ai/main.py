@@ -1,74 +1,114 @@
 import time
-import json
 import os
 from datetime import datetime
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
 import uvicorn
 import httpx
+import requests
+from typing import Optional
 
+
+class SpringRequest(BaseModel):
+    message: str
+    conversation_id: Optional[str] = None
+    user_id: Optional[str] = None
 
 class ChatRequest(BaseModel):
     message: str
     system_prompt: str
     temperature: float
     top_p: float
-    max_tokens: int
-
-class ChatResponse(BaseModel):
-    success: bool
-    response: str
-    processing_time: float
-    model: str
-    timestamp: str
-    file_path: str = None
-    error: str = None
+    max_tokens: int = 2048
 
 app = FastAPI()
 
-def wrap_response_in_json(response_content: str, processing_time: float, model: str) -> str:
-    response_data = {
-        "response": response_content,
-        "metadata": {
-            "model": model,
-            "processing_time_seconds": round(processing_time, 3),
-            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
-        }
-    }
-    
-    return json.dumps(response_data, ensure_ascii=False)
+# Конфигурация Spring API
+SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080/api")
+SPRING_AUTH_TOKEN = os.getenv("SPRING_AUTH_TOKEN", "")
 
-def save_json_to_file(json_data: str, folder_path: str = "ai/json_dumps", filename: str = None) -> str:
-    os.makedirs(folder_path, exist_ok=True)
-    
-    if filename is None:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
-        filename = f"response_{timestamp}.json"
-    
-    if not filename.endswith('.json'):
-        filename += '.json'
-    
-    file_path = os.path.join(folder_path, filename)
-    
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(json_data)
-    
-    return file_path
-
-
+# Конфигурация OpenAI
 API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
 BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 
+def get_spring_message() -> SpringRequest:
+    """Получить сообщение от Spring API"""
+    try:
+        headers = {}
+        if SPRING_AUTH_TOKEN:
+            headers["Authorization"] = f"Bearer {SPRING_AUTH_TOKEN}"
+        
+        response = requests.get(
+            f"{SPRING_API_URL}/messages/next",
+            headers=headers,
+            timeout=30
+        )
+        response.raise_for_status()
+        
+        data = response.json()
+        return SpringRequest(**data)
+        
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Spring API error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error parsing Spring response: {str(e)}")
+
+def send_response_to_spring(response_text: str, conversation_id: Optional[str] = None):
+    """Отправить ответ обратно в Spring API в виде простой строки"""
+    try:
+        headers = {
+            "Content-Type": "text/plain"
+        }
+        if SPRING_AUTH_TOKEN:
+            headers["Authorization"] = f"Bearer {SPRING_AUTH_TOKEN}"
+        
+        # Если нужно передать conversation_id, можно добавить в заголовки или параметры
+        if conversation_id:
+            headers["X-Conversation-Id"] = conversation_id
+        
+        spring_response = requests.post(
+            f"{SPRING_API_URL}/messages/response",
+            data=response_text,  # Используем data вместо json для отправки plain text
+            headers=headers,
+            timeout=30
+        )
+        spring_response.raise_for_status()
+        
+        return True
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to send response to Spring: {str(e)}")
+        return False
+
+def call_llm(message: str, system_prompt: str, temperature: float, top_p: float, max_tokens: int) -> str:
+    """Вызов LLM для генерации ответа"""
+    try:
+        resp = client.chat.completions.create(
+            model="Qwen2.5-72B-Instruct-AWQ",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": message},
+            ],
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+        )
+        return resp.choices[0].message.content
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"LLM error: {str(e)}")
+
 @app.get("/")
 async def root():
     return {
-        "message": "Shiza",
+        "message": "Spring-LLM Integration Service",
         "endpoints": {
-            "chat": "/chat (POST)",
-            "health": "/health (GET)"
+            "process_message": "/process-message (GET)",
+            "health": "/health (GET)",
+            "chat": "/chat (POST)"
         }
     }
 
@@ -76,8 +116,48 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
-@app.post("/chat", response_model=ChatResponse)
+@app.get("/process-message")
+async def process_message_from_spring():
+    """Основной endpoint для получения сообщения от Spring и отправки ответа в виде строки"""
+    try:
+        # Получаем сообщение от Spring API
+        spring_request = get_spring_message()
+        
+        # Настройки для LLM (можно вынести в конфигурацию)
+        system_prompt = "Вы - полезный AI ассистент. Отвечайте вежливо и информативно."
+        temperature = 0.7
+        top_p = 0.9
+        max_tokens = 1024
+        
+        start_time = time.time()
+        
+        # Вызываем LLM
+        llm_response = call_llm(
+            spring_request.message,
+            system_prompt,
+            temperature,
+            top_p,
+            max_tokens
+        )
+        
+        end_time = time.time()
+        processing_time = end_time - start_time
+        
+        # Отправляем простую строку обратно в Spring
+        send_success = send_response_to_spring(llm_response, spring_request.conversation_id)
+        
+        # Возвращаем простой текст вместо JSON
+        return llm_response
+        
+    except HTTPException as e:
+        # В случае ошибки тоже возвращаем простой текст
+        return f"Error: {e.detail}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+@app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
+    """Прямой endpoint для тестирования (возвращает строку)"""
     try:
         start_time = time.time()
         
@@ -93,36 +173,13 @@ async def chat_endpoint(request: ChatRequest):
         )
 
         end_time = time.time()
-        processing_time = end_time - start_time
         response_content = resp.choices[0].message.content
 
-        json_response = wrap_response_in_json(
-            response_content,
-            processing_time,
-            "Qwen2.5-72B-Instruct-AWQ"
-        )
-        
-        file_path = save_json_to_file(json_response)
-
-        return ChatResponse(
-            success=True,
-            response=response_content,
-            processing_time=round(processing_time, 3),
-            model="Qwen2.5-72B-Instruct-AWQ",
-            timestamp=datetime.now().isoformat(),
-            file_path=file_path
-        )
+        # Возвращаем простую строку
+        return response_content
 
     except Exception as e:
-        return ChatResponse(
-            success=False,
-            response="",
-            processing_time=0,
-            model="Qwen2.5-72B-Instruct-AWQ",
-            timestamp=datetime.now().isoformat(),
-            error=str(e)
-        )
-
+        return f"Error: {str(e)}"
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
