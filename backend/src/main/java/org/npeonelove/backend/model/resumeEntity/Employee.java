@@ -12,6 +12,7 @@ public class Employee {
 
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "full_name", length = 255, nullable = false)
@@ -23,10 +24,15 @@ public class Employee {
     @Column(name = "position", length = 255)
     private String position;
 
+    @Column(name = "grade")
     private Integer grade;
 
     @Column(name = "experience_in_company")
     private Integer experienceInCompany; // в месяцах
+
+    @Column(name = "user_comment")
+    private String comment;
+
 
     // Связи
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,8 +48,6 @@ public class Employee {
     private List<AdditionalEducation> additionalEducationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Skill> skills = new ArrayList<>();
+    private List<EmployeeSkill> employeeSkills = new ArrayList<>();
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
 }

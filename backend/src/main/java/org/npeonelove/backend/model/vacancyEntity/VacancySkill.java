@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RequirementSkill {
+public class VacancySkill {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,7 +24,7 @@ public class RequirementSkill {
     private String name;
     private String level;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 }
