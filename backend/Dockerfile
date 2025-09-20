@@ -8,7 +8,7 @@ FROM openjdk:21
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-ENV SERVER_PORT=8090
+ENV SERVER_PORT=8080
 ENV JWT_SECRET_KEY=default-secret
 ENV SPRING_DATASOURCE_URL=jdbc:postgresql://user_db:5435/users
 ENV SPRING_DATASOURCE_USERNAME=postgres

@@ -1,38 +1,67 @@
 import axios from 'axios';
 
-const API_URL = 'https://localhost:8000';
+// Для разработки используем прокси, для продакшена - абсолютный URL
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://your-production-domain.com/api/v1'
+  : '/api/v1';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
+// Интерцептор для добавления токена к запросам
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
+// Интерцептор для обработки ошибок
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Токен истек или невалиден
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authService = {
-  login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
+  // Регистрация
+  signUp: async (userData) => {
+    const response = await api.post('/auth/sign-up', userData);
     return response.data;
   },
 
-  register: async (userData) => {
-    const response = await api.post('/auth/register', userData);
+  // Вход
+  signIn: async (credentials) => {
+    const response = await api.post('/auth/sign-in', credentials);
     return response.data;
   },
 
-  getProfile: async () => {
-    const response = await api.get('/auth/profile');
+  // Обновление токена
+  refreshToken: async (refreshToken) => {
+    const response = await api.post('/auth/refresh-access-token', {
+      refreshToken: refreshToken
+    });
     return response.data;
   },
 
+  // Выход
   logout: async () => {
-    // Очистка на клиенте
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
   }
 };
 
