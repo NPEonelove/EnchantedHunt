@@ -22,7 +22,7 @@ services:
     environment:
       SERVER_PORT: 8080
       JWT_SECRET_KEY: "s7k5n2x9r1v6y8w4z7u5i3o9l2p5n0x3r1v6y8w4z7u5i3o9l2p5n0x3"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://user_db:5435/users"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://ehunt_db:5432/ehunt"
       SPRING_DATASOURCE_USERNAME: "postgres"
       SPRING_DATASOURCE_PASSWORD: "1"
     ports:
