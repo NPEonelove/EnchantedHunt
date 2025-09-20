@@ -117,7 +117,6 @@ async def process_message_from_spring(request: SpringRequest):
         # Возвращаем ответ для отладки
         return {
             "response": llm_response,
-            "status": "success"
         }
         
     except Exception as e:
