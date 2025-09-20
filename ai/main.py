@@ -11,10 +11,10 @@ import httpx
 
 class ChatRequest(BaseModel):
     message: str
-    system_prompt: str = "Ты в роли аналитика резюме"
-    temperature: float = 0.7
-    top_p: float = 0.9
-    max_tokens: int = 256
+    system_prompt: str
+    temperature: float
+    top_p: float
+    max_tokens: int
 
 class ChatResponse(BaseModel):
     success: bool
