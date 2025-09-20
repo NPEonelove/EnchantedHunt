@@ -11,8 +11,6 @@ from typing import Optional
 
 class SpringRequest(BaseModel):
     message: str
-    conversation_id: Optional[str] = None
-    user_id: Optional[str] = None
 
 class ChatRequest(BaseModel):
     message: str
@@ -31,22 +29,6 @@ API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
 BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
-
-# def get_spring_message() -> SpringRequest:
-#     try:
-#         response = requests.get(
-#             f"{SPRING_API_URL}/procces",
-#             timeout=30
-#         )
-#         response.raise_for_status()
-        
-#         data = response.json()
-#         return SpringRequest(**data)
-        
-#     except requests.exceptions.RequestException as e:
-#         return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
-#     except Exception as e:
-#         return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
 
 def send_response_to_spring(response_text: str, conversation_id: Optional[str] = None):
     """Отправить ответ обратно в Spring API без токена"""
@@ -103,20 +85,17 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
-
-class RequestLLM(BaseModel):
-    message: str
-
 @app.post("/process-message")
-async def process_message_from_spring(request: RequestLLM):
+async def process_message_from_spring(request: SpringRequest):
     """Основной endpoint для получения сообщения от Spring и отправки ответа"""
     try:
-        # Получаем сообщение от Spring API
-        spring_request = request.message
+        # Получаем сообщение от Spring API (уже распарсено в объект SpringRequest)
+        message = request.message
+        conversation_id = request.conversation_id
         
         # Если произошла ошибка при получении сообщения
-        if "Ошибка" in spring_request.message:
-            return spring_request.message
+        if "Ошибка" in message:
+            return {"error": message}
         
         # Настройки для LLM
         system_prompt = "Вы - полезный AI ассистент. Отвечайте вежливо и информативно."
@@ -126,7 +105,7 @@ async def process_message_from_spring(request: RequestLLM):
         
         # Вызываем LLM
         llm_response = call_llm(
-            spring_request.message,
+            message,
             system_prompt,
             temperature,
             top_p,
@@ -134,13 +113,18 @@ async def process_message_from_spring(request: RequestLLM):
         )
         
         # Отправляем ответ обратно в Spring
-        send_response_to_spring(llm_response, spring_request.conversation_id)
+        send_response_to_spring(llm_response, conversation_id)
         
         # Возвращаем ответ для отладки
-        return llm_response
+        return {
+            "response": llm_response,
+            "conversation_id": conversation_id,
+            "status": "success"
+        }
         
     except Exception as e:
-        return f"Ошибка обработки: {str(e)}"
+        error_msg = f"Ошибка обработки: {str(e)}"
+        return {"error": error_msg}
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
@@ -157,10 +141,10 @@ async def chat_endpoint(request: ChatRequest):
             max_tokens=request.max_tokens,
         )
 
-        return resp.choices[0].message.content
+        return {"response": resp.choices[0].message.content}
 
     except Exception as e:
-        return f"Error: {str(e)}"
+        return {"error": f"Error: {str(e)}"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
