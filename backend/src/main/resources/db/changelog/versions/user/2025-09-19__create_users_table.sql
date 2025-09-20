@@ -1,3 +1,5 @@
+drop table if exists users;
+
 CREATE TABLE users
 (
     user_id    uuid primary key         default gen_random_uuid(),
