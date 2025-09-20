@@ -526,7 +526,6 @@ body {
   .skills-list {
     justify-content: center;
   }
-<<<<<<< HEAD
   .horizontal-layout {
   display: flex;
   flex-direction: column;
@@ -1372,6 +1371,4 @@ button.loading::after {
   color: #555;
   font-size: 0.9rem;
 }
-=======
->>>>>>> parent of 5cfd7cae (Добавил Вакансии + изменил блоки)
 }
