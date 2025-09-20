@@ -37,7 +37,7 @@ public class VacancyService {
 
     // Получить вакансию по id
     public VacancyResponseDTO getById(UUID id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
+        Vacancy vacancy = vacancyRepository.findByUUID(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacancy with id " + id + " not found"));
         return vacancyMapper.toResponseDTO(vacancy);
     }
@@ -46,7 +46,7 @@ public class VacancyService {
     public VacancyResponseDTO update(UUID id, VacancyRequestDTO dto) {
         validateRequest(dto);
 
-        Vacancy vacancy = vacancyRepository.findById(id)
+        Vacancy vacancy = vacancyRepository.findByUUID(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacancy with id " + id + " not found"));
 
         Vacancy updated = vacancyMapper.toEntity(dto);
@@ -58,10 +58,9 @@ public class VacancyService {
 
     // Удалить вакансию
     public void delete(UUID id) {
-        if (!vacancyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Vacancy with id " + id + " not found");
-        }
-        vacancyRepository.deleteById(id);
+        Vacancy existing = vacancyRepository.findByUUID(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vacancy with id " + id + " not found"));
+        vacancyRepository.delete(existing);
     }
 
     // ==============================

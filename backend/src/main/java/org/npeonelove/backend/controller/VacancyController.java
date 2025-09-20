@@ -32,14 +32,14 @@ public class VacancyController {
 
     // Получить по id
     @GetMapping("/{id}")
-    public ResponseEntity<VacancyResponseDTO> getById(@PathVariable UUID id) {
+    public ResponseEntity<VacancyResponseDTO> getById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(vacancyService.getById(id));
     }
 
     // Обновить
     @PutMapping("/{id}")
     public ResponseEntity<VacancyResponseDTO> update(
-            @PathVariable UUID id,
+            @PathVariable("id") UUID id,
             @RequestBody VacancyRequestDTO dto
     ) {
         return ResponseEntity.ok(vacancyService.update(id, dto));
@@ -47,7 +47,7 @@ public class VacancyController {
 
     // Удалить
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         vacancyService.delete(id);
         return ResponseEntity.noContent().build();
     }
