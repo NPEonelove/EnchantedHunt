@@ -25,14 +25,14 @@ public class EmployeeService {
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) {
         Employee Employee = employeeMapper.toEntity(request);
         Employee saved = employeeRepository.save(Employee);
-        return employeeMapper.toResponseDto(saved);
+        return employeeMapper.toDto(saved);
     }
 
     // READ
     public EmployeeResponseDTO getEmployee(UUID id) {
         Employee Employee = employeeRepository.findByUUID(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id));
-        return employeeMapper.toResponseDto(Employee);
+        return employeeMapper.toDto(Employee);
     }
 
     // UPDATE
@@ -48,7 +48,7 @@ public class EmployeeService {
         Employee.setExperienceInCompany(request.getExperienceInCompany());
 
         Employee updated = employeeRepository.save(Employee);
-        return employeeMapper.toResponseDto(updated);
+        return employeeMapper.toDto(updated);
     }
 
     // DELETE
@@ -60,6 +60,6 @@ public class EmployeeService {
 
     // LIST
     public List<EmployeeResponseDTO> listEmployees() {
-        return employeeMapper.toResponseDtoList(employeeRepository.findAll());
+        return employeeMapper.toDtoList(employeeRepository.findAll());
     }
 }

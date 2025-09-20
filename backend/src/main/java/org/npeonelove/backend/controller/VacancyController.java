@@ -49,6 +49,6 @@ public class VacancyController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         vacancyService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

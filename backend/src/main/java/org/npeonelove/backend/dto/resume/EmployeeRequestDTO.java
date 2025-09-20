@@ -14,12 +14,10 @@ public class EmployeeRequestDTO {
     private String position;
     private Integer grade;
     private Integer experienceInCompany; // в месяцах
+    private String roles;
+    private String  workExperiences;
+    private String educationList;
+    private String additionalEducationList;
+    private String skills;
     private String comment;
-
-
-    private List<RoleDTO> roles;
-    private List<WorkExperienceDTO> workExperiences;
-    private List<EducationDTO> educationList;
-    private List<AdditionalEducationDTO> additionalEducationList;
-    private List<SkillDTO> skills;
 }
