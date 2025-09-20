@@ -2,6 +2,7 @@ package org.npeonelove.backend.model.resumeEntity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.npeonelove.backend.model.achievement.UserStats;
 
 import java.util.*;
 
@@ -14,6 +15,9 @@ public class Employee {
     @GeneratedValue
     @Column(name = "id")
     private UUID id;
+
+    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserStats userStats;
 
     @Column(name = "full_name", length = 255, nullable = false)
     private String fullName;
@@ -29,8 +33,6 @@ public class Employee {
 
     @Column(name = "experience_in_company")
     private Integer experienceInCompany; // в месяцах
-
-
 
     // поля, которые раньше были коллекциями -> теперь TEXT (с JSON внутри, например)
     @Column(name = "roles", columnDefinition = "TEXT")
