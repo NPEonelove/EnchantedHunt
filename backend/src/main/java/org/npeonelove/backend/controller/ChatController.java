@@ -1,8 +1,5 @@
 package org.npeonelove.backend.controller;
 
-<<<<<<< HEAD
-public class ChatController {
-=======
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.dto.chat.CareerGuideRequest;
@@ -25,5 +22,4 @@ public class ChatController {
     public String generateCareerGuideWithoutVacancy(@RequestBody CareerGuideRequest careerGuideRequest) throws JsonProcessingException {
         return chatService.generateCareerGuideWithoutVacancy(careerGuideRequest);
     }
->>>>>>> origin/chat
 }
