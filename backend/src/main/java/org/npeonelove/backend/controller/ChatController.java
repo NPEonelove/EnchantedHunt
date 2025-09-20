@@ -25,6 +25,8 @@ public class ChatController {
     private final ObjectMapper objectMapper;
     private final Map<String, ChatSession> activeSessions = new ConcurrentHashMap<>();
 
+    
+
     @MessageMapping("/chat.without-vacancy")
     @SendTo("/topic/messages")
     public String generateCareerGuideWithoutVacancy(String jsonMessageInitChatCareerGuideWithoutVacancyRequest) throws JsonProcessingException {

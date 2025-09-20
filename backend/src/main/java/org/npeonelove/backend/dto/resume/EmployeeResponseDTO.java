@@ -16,7 +16,7 @@ public class EmployeeResponseDTO {
     private Integer grade;
     private Integer experienceInCompany; // в месяцах
     private String roles;
-    private String  workExperiences;
+    private String workExperiences;
     private String educationList;
     private String additionalEducationList;
     private String skills;
