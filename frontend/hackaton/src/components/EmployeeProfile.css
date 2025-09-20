@@ -1,0 +1,1368 @@
+.employee-profile {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.profile-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-content h1 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.edit-btn, .logout-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.left-column,
+.center-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-card h2 {
+  color: #2d3748;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #2d3748;
+  font-weight: 500;
+  text-align: right;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.responsibilities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.responsibility-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 10px;
+  border-left: 3px solid #48bb78;
+}
+
+.bullet {
+  color: #48bb78;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.experience-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.experience-item {
+  background: rgba(247, 250, 252, 0.8);
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid #ed8936;
+}
+
+.experience-item h3 {
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.experience-item p {
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.resume-preview {
+  background: rgba(247, 250, 252, 0.8);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .profile-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 1;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .value {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-profile {
+    padding: 10px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .edit-btn, .logout-btn {
+    width: 100%;
+  }
+  .employee-profile {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.profile-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-content h1 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.edit-btn, .logout-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.left-column,
+.center-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-card h2 {
+  color: #2d3748;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #2d3748;
+  font-weight: 500;
+  text-align: right;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.responsibilities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.responsibility-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 10px;
+  border-left: 3px solid #48bb78;
+}
+
+.bullet {
+  color: #48bb78;
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.experience-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.experience-item {
+  background: rgba(247, 250, 252, 0.8);
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid #ed8936;
+}
+
+.experience-item h3 {
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.text-with-bullets {
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Стили для формы редактирования (прозрачный фон) */
+.resume-form {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.resume-form .form-group label {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.resume-form input,
+.resume-form select,
+.resume-form textarea {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  color: #2d3748 !important;
+}
+
+.resume-form input:focus,
+.resume-form select:focus,
+.resume-form textarea:focus {
+  border-color: #667eea !important;
+  background: white !important;
+}
+
+.resume-form h2 {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .profile-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 1;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .value {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-profile {
+    padding: 10px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .edit-btn, .logout-btn {
+    width: 100%;
+  }
+}
+.employee-profile {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.profile-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-content h1 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.edit-btn, .logout-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+}
+
+/* Навигационные табы */
+.tabs-navigation {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 15px 25px;
+  border: none;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.tab-btn.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+}
+
+.edit-profile-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Контент профиля */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.left-column,
+.center-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-card h2 {
+  color: #2d3748;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Цвета для разных карточек */
+.personal-card {
+  border-left: 4px solid #667eea;
+}
+
+.work-card {
+  border-left: 4px solid #ed8936;
+}
+
+.skills-card {
+  border-left: 4px solid #9f7aea;
+}
+
+.responsibilities-card {
+  border-left: 4px solid #48bb78;
+}
+
+.experience-card {
+  border-left: 4px solid #f56565;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 12px;
+  border-left: 4px solid;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #2d3748;
+  font-weight: 500;
+  text-align: right;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Списки с точками */
+.bulleted-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bulleted-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 10px;
+}
+
+.bullet {
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Цвета точек для разных карточек */
+.personal-card .bullet { color: #667eea; }
+.work-card .bullet { color: #ed8936; }
+.skills-card .bullet { color: #9f7aea; }
+.responsibilities-card .bullet { color: #48bb78; }
+.experience-card .bullet { color: #f56565; }
+
+/* Стили для вакансий */
+.vacancies-content {
+  padding: 20px;
+}
+
+.vacancies-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.vacancies-header h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.vacancies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.vacancy-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vacancy-card.closed {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
+.vacancy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.vacancy-header h3 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #48bb78;
+  color: white;
+}
+
+.status-badge.closed {
+  background: #a0aec0;
+  color: white;
+}
+
+.vacancy-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 8px;
+}
+
+.detail-item .label {
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.detail-item .value {
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.salary {
+  color: #48bb78 !important;
+  font-weight: 700 !important;
+}
+
+.vacancy-requirements {
+  margin-bottom: 20px;
+}
+
+.vacancy-requirements h4 {
+  color: #2d3748;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.apply-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .profile-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 1;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .value {
+    text-align: left;
+  }
+  
+  .vacancies-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-profile {
+    padding: 10px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .edit-btn, .logout-btn {
+    width: 100%;
+  }
+  
+  .tabs-navigation {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
+}
+.employee-profile {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.profile-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-content h1 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.edit-btn, .logout-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+}
+
+/* Навигационные табы */
+.tabs-navigation {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 15px 25px;
+  border: none;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.tab-btn.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+}
+
+.edit-profile-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Контент профиля */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.left-column,
+.center-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-card h2 {
+  color: #2d3748;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Цвета для разных карточек */
+.personal-card {
+  border-left: 4px solid #667eea;
+}
+
+.work-card {
+  border-left: 4px solid #ed8936;
+}
+
+.skills-card {
+  border-left: 4px solid #9f7aea;
+}
+
+.responsibilities-card {
+  border-left: 4px solid #48bb78;
+}
+
+.experience-card {
+  border-left: 4px solid #f56565;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 12px;
+  border-left: 4px solid;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #2d3748;
+  font-weight: 500;
+  text-align: right;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Списки с точками */
+.bulleted-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bulleted-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 10px;
+}
+
+.bullet {
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Цвета точек для разных карточек */
+.personal-card .bullet { color: #667eea; }
+.work-card .bullet { color: #ed8936; }
+.skills-card .bullet { color: #9f7aea; }
+.responsibilities-card .bullet { color: #48bb78; }
+.experience-card .bullet { color: #f56565; }
+
+/* Стили для вакансий */
+.vacancies-content {
+  padding: 20px;
+}
+
+.vacancies-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.vacancies-header h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.vacancies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.vacancy-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vacancy-card.closed {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
+.vacancy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.vacancy-header h3 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #48bb78;
+  color: white;
+}
+
+.status-badge.closed {
+  background: #a0aec0;
+  color: white;
+}
+
+.vacancy-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(247, 250, 252, 0.8);
+  border-radius: 8px;
+}
+
+.detail-item .label {
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.detail-item .value {
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.salary {
+  color: #48bb78 !important;
+  font-weight: 700 !important;
+}
+
+.vacancy-requirements {
+  margin-bottom: 20px;
+}
+
+.vacancy-requirements h4 {
+  color: #2d3748;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.apply-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .profile-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .right-column {
+    grid-column: span 1;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .value {
+    text-align: left;
+  }
+  
+  .vacancies-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-profile {
+    padding: 10px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .edit-btn, .logout-btn {
+    width: 100%;
+  }
+  
+  .tabs-navigation {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
+}
+}

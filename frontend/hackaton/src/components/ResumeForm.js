@@ -6,10 +6,15 @@ const ResumeForm = ({ initialData, onSave, onCancel }) => {
     position: initialData.position || '',
     department: initialData.department || '',
     phone: initialData.phone || '',
-    skills: initialData.skills.join(', ') || '',
+    level: initialData.level || '', // Новое поле: Уровень
+    hireDate: initialData.hireDate || '', // Новое поле: Дата приема
     experience: initialData.experience || '',
     education: initialData.education || '',
     languages: initialData.languages || '',
+    skills: Array.isArray(initialData.skills) ? initialData.skills.join(', ') : '',
+    responsibilities: Array.isArray(initialData.responsibilities) 
+      ? initialData.responsibilities.join('\n') 
+      : '', // Новое поле: Обязанности (каждая с новой строки)
     resume: initialData.resume || ''
   });
 
@@ -27,16 +32,23 @@ const ResumeForm = ({ initialData, onSave, onCancel }) => {
     const resumeText = `
 Position: ${formData.position}
 Department: ${formData.department}
+Level: ${formData.level}
 Phone: ${formData.phone}
-Skills: ${formData.skills}
+Hire Date: ${formData.hireDate}
 Experience: ${formData.experience}
 Education: ${formData.education}
 Languages: ${formData.languages}
+Skills: ${formData.skills}
+Responsibilities:
+${formData.responsibilities.split('\n').map(resp => `• ${resp}`).join('\n')}
     `.trim();
 
     onSave({
       ...formData,
       skills: formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill),
+      responsibilities: formData.responsibilities.split('\n')
+        .map(resp => resp.trim())
+        .filter(resp => resp), // Преобразуем текст в массив обязанностей
       resume: resumeText
     });
   };
@@ -73,6 +85,35 @@ Languages: ${formData.languages}
             onChange={handleChange}
             required
             placeholder="Enter department"
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Level *</label>
+          <select
+            name="level"
+            value={formData.level}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select level</option>
+            <option value="Junior">Junior</option>
+            <option value="Middle">Middle</option>
+            <option value="Senior">Senior</option>
+            <option value="Lead">Lead</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Hire Date *</label>
+          <input
+            type="date"
+            name="hireDate"
+            value={formData.hireDate}
+            onChange={handleChange}
+            required
           />
         </div>
       </div>
@@ -123,6 +164,21 @@ Languages: ${formData.languages}
           rows="3"
           placeholder="Describe your education..."
         />
+      </div>
+
+      <div className="form-group">
+        <label>Responsibilities (one per line) *</label>
+        <textarea
+          name="responsibilities"
+          value={formData.responsibilities}
+          onChange={handleChange}
+          required
+          rows="4"
+          placeholder="Разработка пользовательского интерфейса
+Оптимизация производительности
+Код-ревью"
+        />
+        <div className="form-hint">Enter each responsibility on a new line</div>
       </div>
 
       <div className="form-group">
