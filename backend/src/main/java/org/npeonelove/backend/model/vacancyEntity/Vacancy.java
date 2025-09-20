@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.npeonelove.backend.model.vacancyEntity.vacancyEnum.CareerLevel;
 import org.npeonelove.backend.model.vacancyEntity.vacancyEnum.EmploymentType;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,22 +39,23 @@ public class Vacancy {
     @Enumerated(EnumType.STRING)
     private CareerLevel careerLevel;
 
-    @Embedded
-    private Salary salary;
+
+    private Integer salary;
 
     private String contactPerson;
-    private String postedDate;
-    private String closingDate;
+    private Date postedDate;
+    private Date closingDate;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Responsibility> responsibilities;
+    // 👇 теперь все списки заменены на одну строку
+    @Column(columnDefinition = "TEXT")
+    private String responsibilities;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Requirement> requirements;
+    @Column(columnDefinition = "TEXT")
+    private String requirements;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VacancySkill> skills;
+    @Column(columnDefinition = "TEXT")
+    private String skills;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Benefit> benefits;
+    @Column(columnDefinition = "TEXT")
+    private String benefits;
 }

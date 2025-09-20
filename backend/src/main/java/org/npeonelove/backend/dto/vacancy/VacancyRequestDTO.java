@@ -2,6 +2,7 @@ package org.npeonelove.backend.dto.vacancy;
 
 import lombok.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Data
@@ -15,14 +16,14 @@ public class VacancyRequestDTO {
     private String employmentType;
     private String description;
     private String careerLevel;
-    private SalaryDTO salary;
+    private Integer salary;
     private String contactPerson;
-    private String postedDate;
-    private String closingDate;
+    private Date postedDate;
+    private Date closingDate;
 
-    private List<ResponsibilityDTO> responsibilities;
-    private List<RequirementDTO> requirements;
-    private List<VacancySkillDTO> skills;
-    private List<BenefitDTO> benefits;
+    private String responsibilities;
+    private String requirements;
+    private String skills;
+    private String benefits;
 
 }

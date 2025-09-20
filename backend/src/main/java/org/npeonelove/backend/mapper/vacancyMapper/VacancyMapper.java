@@ -1,27 +1,18 @@
 package org.npeonelove.backend.mapper.vacancyMapper;
 
 
-
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.npeonelove.backend.dto.vacancy.VacancyRequestDTO;
 import org.npeonelove.backend.dto.vacancy.VacancyResponseDTO;
 import org.npeonelove.backend.model.vacancyEntity.Vacancy;
 
 import java.util.List;
 
-@Mapper(
-        componentModel = "spring",
-        uses = {
-                SalaryMapper.class,
-                ResponsibilityMapper.class,
-                RequirementMapper.class,
-                VacancySkillMapper.class,
-                BenefitMapper.class
-        }
-)
+@Mapper(componentModel = "spring")
 public interface VacancyMapper {
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", ignore = true) // id генерируется базой
     Vacancy toEntity(VacancyRequestDTO dto);
 
     VacancyResponseDTO toResponseDTO(Vacancy vacancy);

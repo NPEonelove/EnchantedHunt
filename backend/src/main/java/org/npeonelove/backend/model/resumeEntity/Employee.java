@@ -30,24 +30,25 @@ public class Employee {
     @Column(name = "experience_in_company")
     private Integer experienceInCompany; // в месяцах
 
-    @Column(name = "user_comment")
-    private String comment;
 
 
-    // Связи
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Role> roles = new ArrayList<>();
+    // поля, которые раньше были коллекциями -> теперь TEXT (с JSON внутри, например)
+    @Column(name = "roles", columnDefinition = "TEXT")
+    private String roles; // JSON array or any string representation
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkExperience> workExperiences = new ArrayList<>();
+    @Column(name = "work_experience", columnDefinition = "TEXT")
+    private String workExperience;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Education> educationList = new ArrayList<>();
+    @Column(name = "education", columnDefinition = "TEXT")
+    private String education;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AdditionalEducation> additionalEducationList = new ArrayList<>();
+    @Column(name = "additional_education", columnDefinition = "TEXT")
+    private String additionalEducation;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EmployeeSkill> skills = new ArrayList<>();
+    @Column(name = "skills", columnDefinition = "TEXT")
+    private String skills;
+
+    @Column(name = "comments", columnDefinition = "TEXT")
+    private String comments;
 
 }
