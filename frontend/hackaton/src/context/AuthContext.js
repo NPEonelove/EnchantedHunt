@@ -74,7 +74,13 @@ const fakeAuthAPI = (email, password) => {
       if (email === 'test@example.com' && password === 'password') {
         resolve({
           token: 'fake-jwt-token',
-          user: { id: 1, email, name: 'Test User' }
+          user: { 
+            id: 1, 
+            email, 
+            name: 'Test User',
+            position: 'Frontend Developer',
+            department: 'IT Department'
+          }
         });
       } else {
         reject(new Error('Invalid credentials'));
@@ -88,7 +94,13 @@ const fakeRegisterAPI = (email, password, name) => {
     setTimeout(() => {
       resolve({
         token: 'fake-jwt-token',
-        user: { id: Date.now(), email, name }
+        user: { 
+          id: Date.now(), 
+          email, 
+          name,
+          position: '',
+          department: ''
+        }
       });
     }, 1000);
   });
