@@ -1,7 +1,6 @@
 import time
 import os
-from datetime import datetime
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
 import uvicorn
@@ -26,7 +25,6 @@ app = FastAPI()
 
 # Конфигурация Spring API
 SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080/api")
-SPRING_AUTH_TOKEN = os.getenv("SPRING_AUTH_TOKEN", "")
 
 # Конфигурация OpenAI
 API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
@@ -35,15 +33,9 @@ BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 
 def get_spring_message() -> SpringRequest:
-    """Получить сообщение от Spring API"""
     try:
-        headers = {}
-        if SPRING_AUTH_TOKEN:
-            headers["Authorization"] = f"Bearer {SPRING_AUTH_TOKEN}"
-        
         response = requests.get(
             f"{SPRING_API_URL}/messages/next",
-            headers=headers,
             timeout=30
         )
         response.raise_for_status()
@@ -52,26 +44,22 @@ def get_spring_message() -> SpringRequest:
         return SpringRequest(**data)
         
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Spring API error: {str(e)}")
+        return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error parsing Spring response: {str(e)}")
+        return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
 
 def send_response_to_spring(response_text: str, conversation_id: Optional[str] = None):
-    """Отправить ответ обратно в Spring API в виде простой строки"""
+    """Отправить ответ обратно в Spring API без токена"""
     try:
-        headers = {
-            "Content-Type": "text/plain"
-        }
-        if SPRING_AUTH_TOKEN:
-            headers["Authorization"] = f"Bearer {SPRING_AUTH_TOKEN}"
+        headers = {"Content-Type": "text/plain"}
         
-        # Если нужно передать conversation_id, можно добавить в заголовки или параметры
+        # Если нужно передать conversation_id, добавляем в заголовки
         if conversation_id:
             headers["X-Conversation-Id"] = conversation_id
         
         spring_response = requests.post(
             f"{SPRING_API_URL}/messages/response",
-            data=response_text,  # Используем data вместо json для отправки plain text
+            data=response_text,
             headers=headers,
             timeout=30
         )
@@ -79,8 +67,7 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
         
         return True
         
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to send response to Spring: {str(e)}")
+    except requests.exceptions.RequestException:
         return False
 
 def call_llm(message: str, system_prompt: str, temperature: float, top_p: float, max_tokens: int) -> str:
@@ -99,14 +86,14 @@ def call_llm(message: str, system_prompt: str, temperature: float, top_p: float,
         return resp.choices[0].message.content
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"LLM error: {str(e)}")
+        return f"Ошибка LLM: {str(e)}"
 
 @app.get("/")
 async def root():
     return {
-        "message": "Spring-LLM Integration Service",
+        "message": "Spring-LLM Integration Service (No Auth)",
         "endpoints": {
-            "process_message": "/process-message (GET)",
+            "process_message": "/process-message (POST)",
             "health": "/health (GET)",
             "chat": "/chat (POST)"
         }
@@ -114,22 +101,24 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+    return {"status": "healthy"}
 
-@app.get("/process-message")
+@app.post("/process-message")
 async def process_message_from_spring():
-    """Основной endpoint для получения сообщения от Spring и отправки ответа в виде строки"""
+    """Основной endpoint для получения сообщения от Spring и отправки ответа"""
     try:
         # Получаем сообщение от Spring API
         spring_request = get_spring_message()
         
-        # Настройки для LLM (можно вынести в конфигурацию)
+        # Если произошла ошибка при получении сообщения
+        if "Ошибка" in spring_request.message:
+            return spring_request.message
+        
+        # Настройки для LLM
         system_prompt = "Вы - полезный AI ассистент. Отвечайте вежливо и информативно."
         temperature = 0.7
         top_p = 0.9
         max_tokens = 1024
-        
-        start_time = time.time()
         
         # Вызываем LLM
         llm_response = call_llm(
@@ -140,27 +129,19 @@ async def process_message_from_spring():
             max_tokens
         )
         
-        end_time = time.time()
-        processing_time = end_time - start_time
+        # Отправляем ответ обратно в Spring
+        send_response_to_spring(llm_response, spring_request.conversation_id)
         
-        # Отправляем простую строку обратно в Spring
-        send_success = send_response_to_spring(llm_response, spring_request.conversation_id)
-        
-        # Возвращаем простой текст вместо JSON
+        # Возвращаем ответ для отладки
         return llm_response
         
-    except HTTPException as e:
-        # В случае ошибки тоже возвращаем простой текст
-        return f"Error: {e.detail}"
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"Ошибка обработки: {str(e)}"
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
-    """Прямой endpoint для тестирования (возвращает строку)"""
+    """Прямой endpoint для тестирования"""
     try:
-        start_time = time.time()
-        
         resp = client.chat.completions.create(
             model="Qwen2.5-72B-Instruct-AWQ",
             messages=[
@@ -172,11 +153,7 @@ async def chat_endpoint(request: ChatRequest):
             max_tokens=request.max_tokens,
         )
 
-        end_time = time.time()
-        response_content = resp.choices[0].message.content
-
-        # Возвращаем простую строку
-        return response_content
+        return resp.choices[0].message.content
 
     except Exception as e:
         return f"Error: {str(e)}"
