@@ -1,5 +1,9 @@
 databaseChangeLog:
   - include:
-      file: /db/changelog/versions/user/2025-09-19__create_users_table.sql
+      file: db/changelog/versions/profiles/2025-09-18__create_resume_profile_table.sql
   - include:
-      file: /db/changelog/versions/user/2025-09-19__add_default_role_value.sql
+      file: db/changelog/versions/profiles/2025-09-19__create_vacancy_profile_table.sql
+  - include:
+      file: db/changelog/versions/user/2025-09-20__create_users_table.sql
+  - include:
+      file: db/changelog/versions/user/2025-09-21__add_default_role_value.sql

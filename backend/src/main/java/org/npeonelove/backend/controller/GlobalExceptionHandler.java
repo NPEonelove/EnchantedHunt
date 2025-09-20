@@ -1,7 +1,10 @@
 package org.npeonelove.backend.controller;
 
+import org.npeonelove.backend.exception.BadRequestException;
 import org.npeonelove.backend.exception.ErrorResponse;
+import org.npeonelove.backend.exception.InternalServerErrorException;
 import org.npeonelove.backend.exception.user.*;
+import org.npeonelove.backend.exception.vacancy.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -66,6 +69,41 @@ public class GlobalExceptionHandler {
                 new ErrorResponse(
                         HttpStatus.BAD_REQUEST.value(),
                         "Refresh token validation failed",
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                )
+        );
+    }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(RefreshTokenValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        "Data not found",
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(RefreshTokenValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "invalid request",
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<ErrorResponse> handleInternal(RefreshTokenValidationException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Server error",
                         ex.getMessage(),
                         LocalDateTime.now()
                 )

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.dto.jwt.GetJwtUserClaimsResponseDTO;
 import org.npeonelove.backend.dto.jwt.JwtAuthenticationDTO;
 import org.npeonelove.backend.service.AuthService;
-import org.npeonelove.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
