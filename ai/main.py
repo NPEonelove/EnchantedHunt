@@ -32,21 +32,21 @@ BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 
-def get_spring_message() -> SpringRequest:
-    try:
-        response = requests.get(
-            f"{SPRING_API_URL}/messages/next",
-            timeout=30
-        )
-        response.raise_for_status()
+# def get_spring_message() -> SpringRequest:
+#     try:
+#         response = requests.get(
+#             f"{SPRING_API_URL}/procces",
+#             timeout=30
+#         )
+#         response.raise_for_status()
         
-        data = response.json()
-        return SpringRequest(**data)
+#         data = response.json()
+#         return SpringRequest(**data)
         
-    except requests.exceptions.RequestException as e:
-        return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
-    except Exception as e:
-        return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
+#     except requests.exceptions.RequestException as e:
+#         return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
+#     except Exception as e:
+#         return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
 
 def send_response_to_spring(response_text: str, conversation_id: Optional[str] = None):
     """Отправить ответ обратно в Spring API без токена"""
@@ -103,12 +103,16 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+
+class RequestLLM(BaseModel):
+    message: str
+
 @app.post("/process-message")
-async def process_message_from_spring():
+async def process_message_from_spring(request: RequestLLM):
     """Основной endpoint для получения сообщения от Spring и отправки ответа"""
     try:
         # Получаем сообщение от Spring API
-        spring_request = get_spring_message()
+        spring_request = request.message
         
         # Если произошла ошибка при получении сообщения
         if "Ошибка" in spring_request.message:
