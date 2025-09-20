@@ -7,15 +7,15 @@ import org.npeonelove.backend.model.resumeEntity.resumeEnum.SkillLevel;
 import java.util.UUID;
 
 @Entity
-@Table(name = "skills")
+@Table(name = "skillsEmployee")
 @Data
-public class Skill {
+public class EmployeeSkill {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "skill_name", length = 255)
+    @Column(name = "skill", length = 255)
     private String skillName;
 
     @Enumerated(EnumType.STRING)

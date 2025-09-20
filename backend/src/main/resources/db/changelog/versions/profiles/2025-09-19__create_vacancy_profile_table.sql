@@ -1,7 +1,7 @@
 -- Включаем расширение для работы с UUID
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE vacancies (
+CREATE TABLE IF NOT EXISTS vacancies (
                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                            title VARCHAR(255) NOT NULL,
                            department VARCHAR(255),
@@ -17,27 +17,27 @@ CREATE TABLE vacancies (
                            closing_date VARCHAR(50)
 );
 
-CREATE TABLE responsibilities (
+CREATE TABLE IF NOT EXISTS responsibilities (
                                   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                   description TEXT NOT NULL,
                                   vacancy_id UUID REFERENCES vacancies(id) ON DELETE CASCADE
 );
 
-CREATE TABLE requirements (
+CREATE TABLE IF NOT EXISTS requirements (
                               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                               description TEXT NOT NULL,
                               mandatory BOOLEAN NOT NULL,
                               vacancy_id UUID REFERENCES vacancies(id) ON DELETE CASCADE
 );
 
-CREATE TABLE skills (
+CREATE TABLE IF NOT EXISTS skills (
                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                         name VARCHAR(255) NOT NULL,
                         level VARCHAR(100),
                         vacancy_id UUID REFERENCES vacancies(id) ON DELETE CASCADE
 );
 
-CREATE TABLE benefits (
+CREATE TABLE IF NOT EXISTS benefits (
                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                           description TEXT NOT NULL,
                           vacancy_id UUID REFERENCES vacancies(id) ON DELETE CASCADE

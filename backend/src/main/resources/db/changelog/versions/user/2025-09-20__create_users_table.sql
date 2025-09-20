@@ -1,4 +1,4 @@
-CREATE TABLE users
+CREATE TABLE if not exists users
 (
     user_id    uuid primary key         default gen_random_uuid(),
     email      VARCHAR(255) UNIQUE NOT NULL,
