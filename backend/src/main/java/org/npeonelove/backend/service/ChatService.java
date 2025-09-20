@@ -9,6 +9,8 @@ import org.npeonelove.backend.dto.chat.InitChatCareerGuideWithVacancyRequestDTO;
 import org.npeonelove.backend.dto.chat.InitChatCareerGuideWithoutVacancyRequestDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -17,9 +19,10 @@ public class ChatService {
     private final ObjectMapper objectMapper;
 
     //возврат ответа на /test
-    public String answerMessage(String message) throws JsonProcessingException {
-        JsonNode jsonNode = objectMapper.readTree(aiFeignClient.test());
-        return "{\"response\": \"" + "Отличный вопрос!" + " " + jsonNode.get("message").asText() +  "\"}";
+    public String answerMessage(String message) {
+//        JsonNode jsonNode = objectMapper.readTree(aiFeignClient.test(message));
+//        return getMessageText(jsonNode);
+        return aiFeignClient.test(message);
     }
 
     // получение карьерной консультации по резюме (без вакансии)

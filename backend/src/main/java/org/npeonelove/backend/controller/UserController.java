@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-
+    
     @PostMapping("/sign-up")
     public ResponseEntity<JwtAuthenticationDTO> signUp(@RequestBody @Valid UserCredentialsRequestDTO userCredentialsRequestDTO,
                                                        BindingResult bindingResult) {

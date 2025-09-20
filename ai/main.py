@@ -34,11 +34,11 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
     """Отправить ответ обратно в Spring API без токена"""
     try:
         headers = {"Content-Type": "text/plain"}
-        
+
         # Если нужно передать conversation_id, добавляем в заголовки
         if conversation_id:
             headers["X-Conversation-Id"] = conversation_id
-        
+
         spring_response = requests.post(
             f"{SPRING_API_URL}/messages/response",
             data=response_text,
@@ -46,9 +46,9 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
             timeout=30
         )
         spring_response.raise_for_status()
-        
+
         return True
-        
+
     except requests.exceptions.RequestException:
         return False
 
@@ -66,7 +66,7 @@ def call_llm(message: str, system_prompt: str, temperature: float, top_p: float,
             max_tokens=max_tokens,
         )
         return resp.choices[0].message.content
-        
+
     except Exception as e:
         return f"Ошибка LLM: {str(e)}"
 
