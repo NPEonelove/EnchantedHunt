@@ -3,3 +3,5 @@ databaseChangeLog:
       file: /db/changelog/versions/user/2025-09-19__create_users_table.sql
   - include:
       file: /db/changelog/versions/user/2025-09-19__add_default_role_value.sql
+  - include:
+      file: /db/changelog/versions/achieve/2025-09-20__create_achievements_table.sql
