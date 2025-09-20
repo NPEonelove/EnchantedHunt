@@ -24,7 +24,7 @@ class ChatRequest(BaseModel):
 app = FastAPI()
 
 # Конфигурация Spring API
-SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080/api")
+SPRING_API_URL = os.getenv("SPRING_API_URL", "http://localhost:8080")
 
 # Конфигурация OpenAI
 API_KEY = os.getenv("OPENAI_API_KEY", "sk-gjJaNA4AavPDqX_rna840Q")
@@ -35,14 +35,14 @@ client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 # def get_spring_message() -> SpringRequest:
 #     try:
 #         response = requests.get(
-#             f"{SPRING_API_URL}/messages/next",
+#             f"{SPRING_API_URL}/procces",
 #             timeout=30
 #         )
 #         response.raise_for_status()
-        
+
 #         data = response.json()
 #         return SpringRequest(**data)
-        
+
 #     except requests.exceptions.RequestException as e:
 #         return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
 #     except Exception as e:
@@ -52,11 +52,11 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
     """Отправить ответ обратно в Spring API без токена"""
     try:
         headers = {"Content-Type": "text/plain"}
-        
+
         # Если нужно передать conversation_id, добавляем в заголовки
         if conversation_id:
             headers["X-Conversation-Id"] = conversation_id
-        
+
         spring_response = requests.post(
             f"{SPRING_API_URL}/messages/response",
             data=response_text,
@@ -64,9 +64,9 @@ def send_response_to_spring(response_text: str, conversation_id: Optional[str] =
             timeout=30
         )
         spring_response.raise_for_status()
-        
+
         return True
-        
+
     except requests.exceptions.RequestException:
         return False
 
@@ -84,7 +84,7 @@ def call_llm(message: str, system_prompt: str, temperature: float, top_p: float,
             max_tokens=max_tokens,
         )
         return resp.choices[0].message.content
-        
+
     except Exception as e:
         return f"Ошибка LLM: {str(e)}"
 
@@ -103,12 +103,16 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+
+class RequestLLM(BaseModel):
+    message: str
+
 @app.post("/process-message")
-async def process_message_from_spring():
+async def process_message_from_spring(request: RequestLLM):
     """Основной endpoint для получения сообщения от Spring и отправки ответа"""
     try:
         # Получаем сообщение от Spring API
-        spring_request = get_spring_message()
+        spring_request = request.message
         
         # Если произошла ошибка при получении сообщения
         if "Ошибка" in spring_request.message:
