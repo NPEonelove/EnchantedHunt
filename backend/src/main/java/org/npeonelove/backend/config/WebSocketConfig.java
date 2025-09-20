@@ -1,4 +1,4 @@
-package org.npeonelove.backend.client;
+package org.npeonelove.backend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

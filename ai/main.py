@@ -32,21 +32,21 @@ BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llm.t1v.scibox.tech/v1")
 
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL, http_client=httpx.Client())
 
-def get_spring_message() -> SpringRequest:
-    try:
-        response = requests.get(
-            f"{SPRING_API_URL}/messages/next",
-            timeout=30
-        )
-        response.raise_for_status()
+# def get_spring_message() -> SpringRequest:
+#     try:
+#         response = requests.get(
+#             f"{SPRING_API_URL}/messages/next",
+#             timeout=30
+#         )
+#         response.raise_for_status()
         
-        data = response.json()
-        return SpringRequest(**data)
+#         data = response.json()
+#         return SpringRequest(**data)
         
-    except requests.exceptions.RequestException as e:
-        return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
-    except Exception as e:
-        return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
+#     except requests.exceptions.RequestException as e:
+#         return SpringRequest(message="Ошибка подключения к Spring API", conversation_id=None)
+#     except Exception as e:
+#         return SpringRequest(message="Ошибка обработки запроса", conversation_id=None)
 
 def send_response_to_spring(response_text: str, conversation_id: Optional[str] = None):
     """Отправить ответ обратно в Spring API без токена"""
