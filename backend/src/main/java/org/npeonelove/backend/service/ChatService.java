@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.npeonelove.backend.client.AiFeignClient;
-import org.npeonelove.backend.dto.chat.CareerGuideRequest;
-import org.npeonelove.backend.dto.resume.EmployeeRequestDTO;
+import org.npeonelove.backend.dto.chat.InitChatCareerGuideWithVacancyRequestDTO;
+import org.npeonelove.backend.dto.chat.InitChatCareerGuideWithoutVacancyRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,9 +23,16 @@ public class ChatService {
     }
 
     // получение карьерной консультации по резюме (без вакансии)
-    public String generateCareerGuideWithoutVacancy(CareerGuideRequest careerGuideRequest) throws JsonProcessingException {
+    public String generateCareerGuideWithoutVacancy(InitChatCareerGuideWithoutVacancyRequestDTO initChatCareerGuideWithoutVacancyRequestDTO) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(
-                aiFeignClient.generateCareerGuideWithoutVacancy(careerGuideRequest));
+                aiFeignClient.generateCareerGuideWithoutVacancy(initChatCareerGuideWithoutVacancyRequestDTO));
+        return getMessageText(jsonNode);
+    }
+
+    // получение карьерной консультации по резюме (с вакансией)
+    public String generateCareerGuideWithVacancy(InitChatCareerGuideWithVacancyRequestDTO initChatCareerGuideWithVacancyRequestDTO) throws JsonProcessingException {
+        JsonNode jsonNode = objectMapper.readTree(
+                aiFeignClient.generateCareerGuideWithVacancy(initChatCareerGuideWithVacancyRequestDTO));
         return getMessageText(jsonNode);
     }
 
